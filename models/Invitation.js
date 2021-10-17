@@ -25,4 +25,4 @@ const Invitation = new Schema({
 },{timestamps:true})
 
 
-export default model(Invitation,"Invitation");
+export default model("Invitation",Invitation);

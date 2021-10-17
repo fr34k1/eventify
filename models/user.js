@@ -6,13 +6,19 @@ import {Schema,model} from 'mongoose';
 const User = new Schema({
     username:{
         type:String,
+        unique:true,
     },
     password_hash:{
         type:String
     },
     email:{
-        type:String
+        type:String,
+        unique:true
     },
+    events:[{
+        type:Schema.Types.ObjectId,
+        ref:"Event"
+    }],
     invitations:[{
         type:Schema.Types.ObjectId,
         ref:"Invitation"

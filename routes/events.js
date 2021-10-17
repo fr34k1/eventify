@@ -25,21 +25,17 @@ router
 .post(
     validate.validate(validate.create),
     validate.validationMid,
-    /*EventController.create,*/(req,res)=>{
-    console.log(req.body)
-    res.json({
-        error:"Asdasd"
-    })
-})
+    EventController.create,
+)
 
 router.route("/update/:id")
 .get((req,res)=>{
     res.render("events/update")
 })
-.post(
+.put(
     validate.validate(validate.update), 
     validate.validationMid,
-   (req,res)=>{}
+    EventController.update
 )
 
 
@@ -47,7 +43,7 @@ router.route("/delete/:id")
 .delete(
     validate.validate(validate.delete),
     validate.validationMid,
-    (req,res)=>{}
+    EventController.delete
 )
 
 

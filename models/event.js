@@ -9,7 +9,7 @@ const Event = new Schema({
         type:String,
         max:50,
         min:3,
-        unique:true,
+        //unique:true, 
         required:true,
     },
     infomation:{
@@ -21,7 +21,7 @@ const Event = new Schema({
         ref:"Invitation"
     }],
     location:{
-        type:String
+        type:Object
     },
     startsAt:{
         type:Date

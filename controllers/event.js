@@ -1,6 +1,7 @@
 
 import Event from '../models/event';
 import Invitation from '../models/Invitation';
+import User from '../models/user';
 
 export default {
 
@@ -12,6 +13,7 @@ export default {
     create:async(req,res)=>{
         
         const {session:{user:{_id:from}},body:{invitations}} = req;
+        console.log(from)
         try {
             
             //create an event
@@ -28,7 +30,7 @@ export default {
                 });
 
                 const user = await User.findOneAndUpdate({_id:user_id},{
-                    "$push":{
+                    $push:{
                         invitations:invitation._id
                     },    
                 }).select("_id invitations")
@@ -40,8 +42,15 @@ export default {
                 await invitation.save()
             }
 
+            
+
             await event.save();
 
+            await User.updateOne({_id:from},{
+                $push:{
+                    events:event._id
+                }
+            })
 
             res.json({
                 created:true,
@@ -49,6 +58,7 @@ export default {
             })
 
         } catch (error) {
+            console.log(error)
             res.json({error:"Application error"});
         }
     },
@@ -58,14 +68,16 @@ export default {
      * @param {*} res 
      * @param {*} req 
      */
-    update:async(res,req)=>{
+    update:async(req,res)=>{
+        
         try {
             //create an event
-            const event = Event.updateOne({_id:req.params._id},req.body);
-            await event.save();
-            
+            await Event.updateOne({_id:req.params.id},req.body);         
             //send invitations notifications to users
-            
+            res.json({
+                updated:true,
+                
+            })
         } catch (error) {
             res.json({error:"Application error"});
         }
@@ -76,11 +88,13 @@ export default {
      */
     delete:async(req,res)=>{
 
-        try {
-            
-           const event = await  Event.findOneAndDelete({_id:req.params._id});
+        const {session:{user}} = req;
 
-            await User.updateOne({_id:event.user},{
+        try {
+            console.log(req.params)
+           const event = await  Event.findOneAndDelete({_id:req.params.id});
+
+            await User.updateOne({_id:user._id},{
                 "$pull":{
                     events:event._id
                 }

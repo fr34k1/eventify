@@ -83,19 +83,8 @@ export default {validate:validate,
     .withMessage("the invitations field is required")
     .isArray()
     .withMessage("the havet o be an array")
-    .custom((val,{req})=>{
-        
-        for(let id of val){
-            _.isMongoId(id);
-        }
-    })
-    .withMessage("esta invitacion no pertenece a un usuario valido")
-    .customSanitizer((val,{req})=>{
-        
-        return val.filter(async(el)=>{
-            return await User.findOne({_id:el}).select("_id") != null ? true:false  ;
-        })
-    })
+    
+    
     ],
     validationMid:async(req,res,next)=>{
         //title validation
@@ -151,16 +140,14 @@ export default {validate:validate,
             if(val.forward!=re.results[0].formatted) throw new Error("Tremendo error guachinnnn");
             
         })
-        .withMessage("Datos de ubicacion invalidos")
-        .trim()
-        .escape(),
+        ,
 
         body("startAt")
         .exists()
         .withMessage("the startAt field is required")
         .not()
         .isEmpty()
-        .withMessage("Esta wea no puede estar vacia hijo de p")
+        .withMessage("Esta wea no  puede estar vacia hijo de p")
         
         ,
         //endsAt date validation

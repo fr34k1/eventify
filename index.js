@@ -58,6 +58,7 @@ app.listen(3000,()=>console.log("server running on 3000"));
 ///console.log(redis)
 //console.log(mongoose)
 
-
-mongoose.connect("mongod://localhost/nueva",()=>console.log("db connected"))
-.catch(e=>console.log(e))
+ 
+mongoose.connect("mongodb://localhost/nueva",()=>console.log("db connected"))
+.then(e=>console.log(e))
+.catch(e=>console.log(e))  
