@@ -1,8 +1,7 @@
-
-
 import {Router} from 'express';
 import EventController from '../controllers/event';
 import validate from '../middlewares/validation/event'; 
+
 
 const router = Router({strict:true});
 
@@ -16,6 +15,7 @@ router.all("*",function(req,res,next){
     next()
 })
 
+
 router
 .route("/create")
 .get((req,res,next)=>{
@@ -27,6 +27,7 @@ router
     validate.validationMid,
     EventController.create,
 )
+
 
 router.route("/update/:id")
 .get((req,res)=>{
