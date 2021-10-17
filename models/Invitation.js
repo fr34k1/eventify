@@ -19,7 +19,8 @@ const Invitation = new Schema({
     },
     state:{
         type:String,
-        enum:["progress","canceled","confirmed"]
+        enum:["progress","canceled","confirmed"],
+        default:"progress"
     }
 },{timestamps:true})
 

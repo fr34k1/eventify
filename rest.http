@@ -1,0 +1,4 @@
+
+
+POST http://localhost:3000/event/create HTTP/
+content-type: application/json

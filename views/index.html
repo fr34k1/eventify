@@ -9,5 +9,35 @@
 <body>
     
     <h2><%=locals.username%></h2>
+
+<script>
+    async function a(){
+       const r=  await fetch("http://localhost:3000/event/create",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                title:"laconcha de tu hermana",
+                information:"haha",
+                invitations:["Asdasd","asdasd"],
+                location:{
+                    forward:"Tucumán 3144, Nueva Roma, Casilda, Argentina" ,
+                    geo:[-33.05374, -61.17409]
+                },
+                startAt:new Date(),
+                endsAt:new Date()
+            })
+        })
+
+        console.log(JSON.parse(await r.text()));
+        r.headers.forEach(e=>{
+            console.log(e)
+        })
+        console.log();
+    }
+
+    a()
+</script>
 </body>
 </html>

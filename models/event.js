@@ -7,19 +7,21 @@ import {Schema,model, SchemaTypes} from 'mongoose';
 const Event = new Schema({
     title:{
         type:String,
+        max:50,
+        min:3,
+        unique:true,
+        required:true,
     },
     infomation:{
-        type:String
+        type:String,
+        max:1000,
     },
     invitations:[{
         type:Schema.Types.ObjectId,
         ref:"Invitation"
     }],
     location:{
-        Country:String,
-        State:String,
-        city:String,
-        address:String
+        type:String
     },
     startsAt:{
         type:Date
@@ -34,4 +36,4 @@ const Event = new Schema({
 },{timestamps:true})
 
 
-export default model(Event,"Event");
+export default model("Event",Event);
