@@ -12,21 +12,22 @@
 
 <script>
     async function a(){
-       const r=  await fetch("http://localhost:3000/event/update/616c56e506e4b4fdcf49caa6",{
-            method:"PUT",
+       const r=  await fetch("http://localhost:3000/event/616c56e506e4b4fdcf49caa6/invitations/push",{
+            method:"POST",
             headers:{
                 "Content-Type":"application/json"
             },
             body:JSON.stringify({
-                title:"laconcha de tu hermana nu se2312123 chango",
-                information:"haha 1212312312312123123123",
-                
+                to:"616c4de885062ba402f25e71"
+                /* title:"12aconcha de tu hermana nu se231212322 chango123",
+                information:"haha 123121212312312312123123123",
+                invitations:[],
                 location:{
                     forward:"Tucumán 3144, Nueva Roma, Casilda, Argentina" ,
                     geo:[-33.05374, -61.17409]
                 },
-                startAt:new Date(),
-                endsAt:new Date()
+                startsAt:new Date(),
+                endsAt:new Date() */
             })
         })
 

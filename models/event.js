@@ -1,4 +1,4 @@
-
+import pagination from '../api/utils/pagination'
 
 
 import {Schema,model, SchemaTypes} from 'mongoose';
@@ -34,6 +34,17 @@ const Event = new Schema({
         enum:["progress","canceled","finished"]
     }
 },{timestamps:true})
+
+
+Event.virtual("totalInvitations").get(function(){
+    return this.invitations.length;
+})
+
+
+Event.pre("find",function(next){
+    
+    next();
+}) 
 
 
 export default model("Event",Event);

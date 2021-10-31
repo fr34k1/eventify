@@ -6,10 +6,23 @@ import {gql} from 'apollo-server';
 const typeDefs=gql`
 
     type Query{
-
-        hello:String
         myEvents(filter:EventFilter,page:Int,limit:Int):EventQuery
+        myInvitations(filter:InvitationFilter,page:Int,limit:Int):InvitationQuery
+        getEvent(id:ID):Event
+        getEventInvitations(id:ID,filter:InvitationFilter,page:Int,limit:Int):InvitationQuery
+    
+        
     }
+    
+    input InvitationFilter{
+        status:String    
+    }
+    type InvitationQuery{
+        invitations:[Invitation]
+        pagination:Pagination
+    }
+
+    
 
     input EventFilter{
         title:String
@@ -41,6 +54,7 @@ const typeDefs=gql`
         invitations:[Invitation]
         state:String
         createdAt:String
+        totalInvitations:Int
         
     }
 

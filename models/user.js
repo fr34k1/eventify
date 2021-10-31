@@ -1,7 +1,8 @@
 
 
 import {Schema,model} from 'mongoose';
-
+import bcrypt from 'bcrypt';
+import { buildClientSchema } from 'graphql';
 
 const User = new Schema({
     username:{
@@ -33,4 +34,22 @@ const User = new Schema({
 //console.log(User);
 //console.log(Schema);
 
-export default model("User",User); 
+
+User.virtual("totalEvents").get(function(){
+    return this.events.length
+})
+
+User.pre("save",async function(next){
+
+    console.log("guachin!!!")
+    this.password = await bcrypt.hash(this.password,10);
+    next()
+})
+ 
+
+User.methods.comparePasswords=async function(password){
+    return await bcrypt.compare(password,this.password)
+}
+
+
+export default model("User",User);  

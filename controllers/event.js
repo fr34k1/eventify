@@ -1,8 +1,7 @@
 
 import Event from '../models/event';
-import Invitation from '../models/Invitation';
+import Invitation from "../models/Invitation";
 import User from '../models/user';
-
 export default {
 
 /**
@@ -41,8 +40,6 @@ export default {
                 
                 await invitation.save()
             }
-
-            
 
             await event.save();
 
@@ -127,37 +124,37 @@ export default {
      */
     pullInvitations:async(req,res,next)=>{
         
+        const {params:{id:event_id},body:{id:invitation_id}} = req;
         try{ 
             
-            const invitation = await Invitation.findOneAndDelete({_id:req.params._id});
+            const invitation = await Invitation.findOneAndDelete({_id:invitation_id});
 
-            const event = await  Event.updateOne({_id:req.params._id},{
+            const event = await  Event.updateOne({_id:event_id},{
                 "$pull":{
-                    invitations:req.body.invitation_id
+                    invitations:invitation_id
                 }
             });
             
             await User.updateOne({_id:invitation.to},{
                 "$pull":{
-                    invitations:invitation._id,
+                    invitations:invitation_id,
                 },
             })
 
             res.json({pulled:true,invitation:invitation});
 
-            
-
         } catch (error) {
+            console.log(error)
             res.status(500);
-            res.json({error:"application errorrrrrrrrr guachin"})
+            res.json({error:"application error guachin"})
         }
         
 
     },
     pushInvitations:async(req,res,next)=>{
 
-        const {body:{to,id}} = req;
-
+        const {body:{to},params:{id},session:{user:{_id:from}}} = req;
+        console.log(Invitation);
         try {
             const invitation = new Invitation({
                 from:from,
@@ -165,20 +162,24 @@ export default {
             });
 
             const event = await  Event.findOneAndUpdate({_id:id},{
-                "$puhs":{
+                $push:{
                     invitations:invitation._id
-                }
+                } 
             });
-            
-            invitation.to=to;
+   
+            invitation.to = to;
 
+            await invitation.save();
+            
             res.status(200);
             res.json({
                 pushed:true,
                 invitation:invitation
             })
         }catch(error){
+            console.log(error)
+            console.log("ASdasdasd")
             res.json({error:"application error guachinnnnnnnnnnnnnn!"})
         }
     }
-}
+} 

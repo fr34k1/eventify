@@ -29,18 +29,3 @@ class Pagination{
 }
 
 
-
-const _pagination=(page,total,limit)=>{
-    const tpages = total > limit ? Math.ceil(total/limit):1;
-    return { 
-        total:total,
-        limit:limit ? limit : 10,
-        page:page ? page :1,
-        totalPages:tpages ,
-        hasNext:page<=tpages ? true: false,
-        hasPrev:page==0 ? true :false
-    }
-    
-}
-
-export default _pagination;

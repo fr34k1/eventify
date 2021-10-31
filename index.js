@@ -7,7 +7,7 @@ import session from 'express-session';
 //import redis from 'redis';
 import mongoose from 'mongoose';
 import dotenv from "dotenv";
-
+import cors from 'cors';
 dotenv.config()
 var app =express();
 
@@ -20,6 +20,7 @@ app.use(fileUpload({
     tempFileDir : './tmp/'
 
 }))
+app.use(cors())
 app.use(express.urlencoded({extended:false}))
 app.use(express.json());
 
@@ -38,9 +39,10 @@ app.use(session({
 //routes
 import indexRoutes from './routes/index';
 import eventRoutes from './routes/events';
+import authenticationRoutes from './routes/authentication';
 app.use("/",indexRoutes);
 app.use("/event",eventRoutes);
-
+app.use("/auth",authenticationRoutes);
 
 
 

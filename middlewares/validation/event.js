@@ -1,29 +1,18 @@
 
 
-import {param,check,body,validationResult} from 'express-validator';
+import {param,check,body} from 'express-validator';
 import axios from 'axios';
 import User from '../../models/user';
+
+import _Invitation from "../../models/Invitation";
+
 import createError from 'http-errors';
 //import fetch from 'node-fetch';
 import opencage from "opencage-api-client";
 
 
-const validate = validations=>{
-    return async (req,res,next)=>{
 
-        for(let validation of validations){
-            
-            //console.log(validation) 
-            const result = await validation.run(req);
-
-            if(result.errors.length) continue;
-        }
-
-        next();
-    } 
-}
-
-export default {validate:validate,
+export default {
     
     create:[
     body("title")
@@ -60,7 +49,7 @@ export default {validate:validate,
         
     }),
 
-    body("startAt")
+    body("startsAt")
     .exists()
     .withMessage("the startAt field is required")
     .not()
@@ -86,16 +75,6 @@ export default {validate:validate,
     
     
     ],
-    validationMid:async(req,res,next)=>{
-        //title validation
-        const errors = validationResult(req).array({onlyFirstError:true});
-       
-        if(errors.length){
-         console.log(errors)
-            return res.json(errors);
-        }  
-        next()
-    },
 
     update:[
         param("id")
@@ -142,7 +121,7 @@ export default {validate:validate,
         })
         ,
 
-        body("startAt")
+        body("startsAt")
         .exists()
         .withMessage("the startAt field is required")
         .not()
@@ -159,10 +138,9 @@ export default {validate:validate,
         .withMessage("Esta wea no puede estar vacia hijo de p")
         .escape()
         ,
-
-        
     ],
-    delete:[
+    
+    userEvent:[ 
         param("id")
         .exists()
         .withMessage("the endsAt field is required")
@@ -170,9 +148,47 @@ export default {validate:validate,
         .isEmpty()
         .withMessage("Esta wea no puede estar vacia hijo de p")
         .isMongoId()
-        .withMessage("no es un parametro valido guachin")
-    ]
-    
+        /*.withMessage("no es un parametro valido guachin")
+        */
+        .custom(async(id,{req})=>{
+            const {session:{user:{_id:user_id}}} = req;
+
+            const user = await User.findOne({_id:user_id,events:{$in:[id]}},{
+                
+            }).select("_id events")
+
+            if(user.events.length ==0){
+                throw new Error("wtf dawg!!!!!! ")
+            } 
+        })
+    ],
+     
+    to:[
+        body("to")
+        .exists()
+        .withMessage("the endsAt field is required")
+        .not()
+        .isEmpty()
+        .withMessage("Esta wea no puede estar vacia hijo de p")
+        .isMongoId()
+        .custom(async(val,{req})=>{
+
+            const to = await User.findOne({_id:val}).select("_id")
+
+            if(to._id==undefined) throw new Error("This user doestn Exists !!! craps!");
+            
+            req.body.to=to._id;
+        })
+        .custom(async(val,{req})=>{
+            const {params:{id}} = req;
+            //console.log(_Invitation)
+            console.log(id,val)
+            const inv = await _Invitation.findOne({event:id,to:val})
+            console.log(inv)
+            if(inv._id!=undefined) throw new Error("Wtf dawg!! this user is already invited");
+        }) 
+        
+    ]  
 };
  
  

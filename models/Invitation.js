@@ -2,7 +2,7 @@
 
 
 import {Schema,model, SchemaTypes} from 'mongoose';
-
+import paginate from 'mongoose-paginate-v2';
 
 const Invitation = new Schema({
     to:{
@@ -24,5 +24,9 @@ const Invitation = new Schema({
     }
 },{timestamps:true})
 
+//Invitation.plugin(paginate)
 
-export default model("Invitation",Invitation);
+
+
+const invitation = model("Invitation",Invitation);
+export default invitation;

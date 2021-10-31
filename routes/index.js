@@ -20,7 +20,7 @@ router
     console.log(req.body);
     res.render("index.html")
 })
-.post((req,res,next)=>{
+.post((req,res,next)=>{ 
     
     console.log(req.body);
     res.json({error:"asdasd"})

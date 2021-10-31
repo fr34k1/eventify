@@ -1,6 +1,8 @@
 import {Router} from 'express';
+
 import EventController from '../controllers/event';
-import validate from '../middlewares/validation/event'; 
+import validations from '../middlewares/validation/event'; 
+import validate from '../middlewares/validation/validate'; 
 
 
 const router = Router({strict:true});
@@ -8,12 +10,7 @@ const router = Router({strict:true});
 //console.log(validate)
 //console.log(validations)
 
-router.all("*",function(req,res,next){
-    //pa tota cochinas ruñas
-    
-    res.locals.username="chango"
-    next()
-})
+
 
 
 router
@@ -23,10 +20,11 @@ router
     res.render("index.html")
 })
 .post(
-    validate.validate(validate.create),
+    validate.validate(validations.create),
     validate.validationMid,
     EventController.create,
 )
+
 
 
 router.route("/update/:id")
@@ -34,7 +32,7 @@ router.route("/update/:id")
     res.render("events/update")
 })
 .put(
-    validate.validate(validate.update), 
+    validate.validate(validations.update), 
     validate.validationMid,
     EventController.update
 )
@@ -42,11 +40,24 @@ router.route("/update/:id")
 
 router.route("/delete/:id")
 .delete(
-    validate.validate(validate.delete),
+    validate.validate(validations.userEvent),
     validate.validationMid,
     EventController.delete
 )
 
+
+router.post("/:id/invitations/push",
+    validate.validate([...validations.userEvent,...validations.to]),
+    validate.validationMid,
+    EventController.pushInvitations,
+)
+
+
+router.post("/:id/invitations/pull",
+    validate.validate([...validations.userEvent,...validations.to]),
+    validate.validationMid,
+    EventController.pushInvitations
+)
 
 
 
